@@ -3,56 +3,83 @@ import sys
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-import sys, os
+import sys
+import os
 from PIL import Image
 
-args = sys.argv
 
-keyword = args[1]
-max_num = args[2]
+# imageで指定した画像をrectの範囲でクロップして返す
+def crop(image, rect):
+    x = rect[0]
+    y = rect[1]
+    width = rect[2]
+    height = rect[3]
+    return image[y:y + height, x:x + width]
 
-input_file_path = f"./training_data/original/{keyword}/"
-output_file_path = f"./training_data/cropped_face/{keyword}/"
 
-crawler = GoogleImageCrawler(storage={"root_dir": input_file_path})
-crawler.crawl(keyword=keyword, max_num=int(max_num))
+# rectで指定した矩形の左上の座標を返す
+def top_left(rect):
+    return (rect[0], rect[1])
 
-os.makedirs(output_file_path, exist_ok=True)
 
-def get_file(dir_path):
-    filenames = os.listdir(dir_path)
-    return filenames
+# rectで指定した矩形の右下の座標を返す
+def bottom_right(rect):
+    return (rect[0] + rect[2], rect[1] + rect[3])
 
-input_files = get_file(input_file_path)
 
-for input_file in input_files:
-    # 画像の読み込み
-    input_image = cv2.imread(input_file_path + input_file)
-    cv2.imshow('input_image',input_image)
-    cv2.waitKey(100)
+def main():
+    keyword = sys.argv[1]
+    max_num = sys.argv[2]
+
+    input_file_path = f"./training_data/original/{keyword}/"
+    output_file_path = f"./training_data/cropped_face/{keyword}/"
+
+    crawler = GoogleImageCrawler(storage={"root_dir": input_file_path})
+    crawler.crawl(keyword=keyword, max_num=int(max_num))
+
+    os.makedirs(output_file_path, exist_ok=True)
+    input_files = os.listdir(input_file_path)
 
     # 顔認識用特徴量ファイルを読み込む --- （カスケードファイルのパスを指定）
     cascade = cv2.CascadeClassifier("./haarcascade_frontalface_alt.xml")
 
-    # 顔認識の実行
-    face_rects = cascade.detectMultiScale(input_image,scaleFactor=1.1,minNeighbors=10,minSize=(10,10))
+    for input_file in input_files:
+        input_image = cv2.imread(input_file_path + input_file)
 
-    # 顔の検出に失敗した場合
-    if len(face_rects) == 0:
-        continue
+        # 認識結果表示用のwindowを作成
+        cv2.namedWindow('window', cv2.WINDOW_KEEPRATIO | cv2.WINDOW_NORMAL)
+        cv2.imshow('window', input_image)
+        cv2.waitKey(100)
 
-    # 最初に検出した顔のみ取得
-    face_rect = face_rects[0]
-    # 顔だけ切り出して保存
-    x = face_rect[0]
-    y = face_rect[1]
-    width = face_rect[2]
-    height = face_rect[3]
-    output_image = input_image[y:y + height, x:x + width]
-    cv2.imshow('input_image',output_image)
-    cv2.waitKey(100)
-    save_path = output_file_path + input_file
+        # 顔認識の実行
+        face_rects = cascade.detectMultiScale(input_image,
+                                              scaleFactor=1.1,
+                                              minNeighbors=10,
+                                              minSize=(10, 10))
 
-    #認識結果の保存
-    cv2.imwrite(save_path, output_image)
-    cv2.destroyAllWindows()
+        # 顔の検出に失敗した場合
+        if len(face_rects) == 0:
+            continue
+
+        # 最初に検出した顔のみ取得
+        face_rect = face_rects[0]
+
+        # 顔領域だけ切り出して保存
+        output_image = crop(input_image, face_rect)
+        cv2.imwrite(output_file_path + input_file, output_image)
+
+        # 顔領域に矩形を描画
+        input_image_with_rect = cv2.rectangle(input_image,
+                                              top_left(face_rect),
+                                              bottom_right(face_rect),
+                                              (0, 255, 0),
+                                              3)
+
+        cv2.imshow('window', input_image_with_rect)
+        cv2.waitKey(100)
+
+        # windowを破棄
+        cv2.destroyAllWindows()
+
+
+main()
