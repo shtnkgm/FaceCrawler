@@ -32,11 +32,8 @@ def drawRect(image, rect, color):
         3)
 
 
-# メイン関数
-def main():
-    keyword = sys.argv[1]
-    max_num = sys.argv[2]
-
+# 指定したキーワードの画像を取得して顔領域を切り出して保存
+def fetchAndCropFace(keyword, max_num):
     input_file_path = f"./training_data/original/{keyword}/"
     output_file_path = f"./training_data/cropped_face/{keyword}/"
 
@@ -57,6 +54,7 @@ def main():
     # 認識結果表示用のwindowを作成
     windowName = 'window'
     cv2.namedWindow(windowName, cv2.WINDOW_KEEPRATIO | cv2.WINDOW_NORMAL)
+    cv2.resizeWindow(windowName, 500, 500)
 
     for input_file in input_files:
         input_image = cv2.imread(input_file_path + input_file)
@@ -65,9 +63,8 @@ def main():
             continue
 
         height, width, _ = input_image.shape
-        cv2.resizeWindow(windowName, 500, int(500 * height / width))
         cv2.imshow(windowName, input_image)
-        cv2.waitKey(100)
+        cv2.waitKey(50)
 
         # 顔認識の実行
         face_rects = cascade.detectMultiScale(
@@ -90,10 +87,19 @@ def main():
         # 顔領域に矩形を描画して表示
         marked_input_image = drawRect(input_image, face_rect, (0, 255, 0))
         cv2.imshow(windowName, marked_input_image)
-        cv2.waitKey(100)
+        cv2.waitKey(50)
 
     # windowを破棄
     cv2.destroyAllWindows()
+
+
+# メイン関数
+def main():
+    max_num = sys.argv[1]
+    keywords = sys.argv[2:len(sys.argv)]
+
+    for keyword in keywords:
+        fetchAndCropFace(keyword, max_num)
 
 
 main()
