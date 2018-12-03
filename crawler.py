@@ -49,12 +49,16 @@ def main():
     # 顔認識用特徴量ファイルを読み込む --- （カスケードファイルのパスを指定）
     cascade = cv2.CascadeClassifier("./haarcascade_frontalface_alt.xml")
 
+    # 認識結果表示用のwindowを作成
+    let windowName = 'window'
+    cv2.namedWindow(windowName, cv2.WINDOW_KEEPRATIO | cv2.WINDOW_NORMAL)
+
     for input_file in input_files:
         input_image = cv2.imread(input_file_path + input_file)
 
-        # 認識結果表示用のwindowを作成
-        cv2.namedWindow('window', cv2.WINDOW_KEEPRATIO | cv2.WINDOW_NORMAL)
-        cv2.imshow('window', input_image)
+        height, width, _ = input_image.shape
+        cv2.cvResizeWindow(windowName, width, height)
+        cv2.imshow(windowName, input_image)
         cv2.waitKey(100)
 
         # 顔認識の実行
@@ -76,7 +80,7 @@ def main():
 
         # 顔領域に矩形を描画して表示
         input_image_with_rect = drawRect(input_image, face_rect)
-        cv2.imshow('window', input_image_with_rect)
+        cv2.imshow(windowName, input_image_with_rect)
         cv2.waitKey(100)
 
         # windowを破棄
