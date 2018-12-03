@@ -22,6 +22,13 @@ def top_left(rect):
 def bottom_right(rect):
     return (rect[0] + rect[2], rect[1] + rect[3])
 
+# imageで指定した画像にrectの矩形を描画して返す
+def drawRect(image, rect):
+    return cv2.rectangle(image,
+                         top_left(rect),
+                         bottom_right(rect),
+                         (0, 255, 0),
+                         3)
 
 def main():
     keyword = sys.argv[1]
@@ -53,7 +60,7 @@ def main():
                                               minNeighbors=10,
                                               minSize=(10, 10))
 
-        # 顔の検出に失敗した場合
+        # 顔の検出に失敗した場合はcontinue
         if len(face_rects) == 0:
             continue
 
@@ -64,13 +71,8 @@ def main():
         output_image = crop(input_image, face_rect)
         cv2.imwrite(output_file_path + input_file, output_image)
 
-        # 顔領域に矩形を描画
-        input_image_with_rect = cv2.rectangle(input_image,
-                                              top_left(face_rect),
-                                              bottom_right(face_rect),
-                                              (0, 255, 0),
-                                              3)
-
+        # 顔領域に矩形を描画して表示
+        input_image_with_rect = drawRect(input_image, face_rect)
         cv2.imshow('window', input_image_with_rect)
         cv2.waitKey(100)
 
