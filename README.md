@@ -14,3 +14,6 @@ wget https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/ha
 # Fetch 100 Images for keyword 'person_name'
 python3 crawler.py person_name 100
 ```
+
+## Requirements
+ - Python3
