@@ -78,8 +78,8 @@ def main():
         cv2.imwrite(output_file_path + input_file, output_image)
 
         # 顔領域に矩形を描画して表示
-        input_image_with_rect = drawRect(input_image, face_rect)
-        cv2.imshow(windowName, input_image_with_rect)
+        marked_input_image = drawRect(input_image, face_rect)
+        cv2.imshow(windowName, marked_input_image)
         cv2.waitKey(100)
 
     # windowを破棄
