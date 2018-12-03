@@ -6,21 +6,20 @@ import os
 
 # imageで指定した画像をrectの範囲でクロップして返す
 def crop(image, rect):
-    x = rect[0]
-    y = rect[1]
-    width = rect[2]
-    height = rect[3]
+    x, y, width, height = rect
     return image[y:y + height, x:x + width]
 
 
 # rectで指定した矩形の左上の座標を返す
 def top_left(rect):
-    return (rect[0], rect[1])
+    x, y, _, _ = rect
+    return (x, y)
 
 
 # rectで指定した矩形の右下の座標を返す
 def bottom_right(rect):
-    return (rect[0] + rect[2], rect[1] + rect[3])
+    x, y, width, height = rect
+    return (x + width, y + height)
 
 
 # imageで指定した画像にrectの矩形を描画して返す
@@ -50,14 +49,14 @@ def main():
     cascade = cv2.CascadeClassifier("./haarcascade_frontalface_alt.xml")
 
     # 認識結果表示用のwindowを作成
-    let windowName = 'window'
+    windowName = 'window'
     cv2.namedWindow(windowName, cv2.WINDOW_KEEPRATIO | cv2.WINDOW_NORMAL)
 
     for input_file in input_files:
         input_image = cv2.imread(input_file_path + input_file)
 
         height, width, _ = input_image.shape
-        cv2.cvResizeWindow(windowName, width, height)
+        cv2.resizeWindow(windowName, 500, int(500 * height / width))
         cv2.imshow(windowName, input_image)
         cv2.waitKey(100)
 
@@ -83,8 +82,8 @@ def main():
         cv2.imshow(windowName, input_image_with_rect)
         cv2.waitKey(100)
 
-        # windowを破棄
-        cv2.destroyAllWindows()
+    # windowを破棄
+    cv2.destroyAllWindows()
 
 
 main()
