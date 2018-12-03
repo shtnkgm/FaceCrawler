@@ -22,14 +22,14 @@ def bottom_right(rect):
     return (x + width, y + height)
 
 
-# imageで指定した画像にrectの矩形を描画して返す
-def drawRect(image, rect):
-    return cv2.rectangle(image,
-                         top_left(rect),
-                         bottom_right(rect),
-                         (0, 255, 0),
-                         3)
-
+# imageで指定した画像に指定したcolorのrectの矩形を描画して返す
+def drawRect(image, rect, color):
+    return cv2.rectangle(
+        image,
+        top_left(rect),
+        bottom_right(rect),
+        color,
+        3)
 
 # メイン関数
 def main():
@@ -39,7 +39,12 @@ def main():
     input_file_path = f"./training_data/original/{keyword}/"
     output_file_path = f"./training_data/cropped_face/{keyword}/"
 
-    crawler = GoogleImageCrawler(storage={"root_dir": input_file_path})
+    crawler = GoogleImageCrawler(
+        feeder_threads=1,
+        parser_threads=2,
+        downloader_threads=4,
+        storage={"root_dir": input_file_path})
+
     crawler.crawl(keyword=keyword, max_num=int(max_num))
 
     os.makedirs(output_file_path, exist_ok=True)
@@ -55,16 +60,20 @@ def main():
     for input_file in input_files:
         input_image = cv2.imread(input_file_path + input_file)
 
+        if input_image is None:
+            continue
+
         height, width, _ = input_image.shape
         cv2.resizeWindow(windowName, 500, int(500 * height / width))
         cv2.imshow(windowName, input_image)
         cv2.waitKey(100)
 
         # 顔認識の実行
-        face_rects = cascade.detectMultiScale(input_image,
-                                              scaleFactor=1.1,
-                                              minNeighbors=10,
-                                              minSize=(10, 10))
+        face_rects = cascade.detectMultiScale(
+            input_image,
+            scaleFactor=1.1,
+            minNeighbors=10,
+            minSize=(10, 10))
 
         # 顔の検出に失敗した場合はcontinue
         if len(face_rects) == 0:
@@ -78,7 +87,7 @@ def main():
         cv2.imwrite(output_file_path + input_file, output_image)
 
         # 顔領域に矩形を描画して表示
-        marked_input_image = drawRect(input_image, face_rect)
+        marked_input_image = drawRect(input_image, face_rect, (0, 255, 0))
         cv2.imshow(windowName, marked_input_image)
         cv2.waitKey(100)
 
