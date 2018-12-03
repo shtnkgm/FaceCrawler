@@ -22,6 +22,7 @@ def top_left(rect):
 def bottom_right(rect):
     return (rect[0] + rect[2], rect[1] + rect[3])
 
+
 # imageで指定した画像にrectの矩形を描画して返す
 def drawRect(image, rect):
     return cv2.rectangle(image,
@@ -30,6 +31,8 @@ def drawRect(image, rect):
                          (0, 255, 0),
                          3)
 
+
+# メイン関数
 def main():
     keyword = sys.argv[1]
     max_num = sys.argv[2]
