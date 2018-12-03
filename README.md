@@ -4,6 +4,9 @@ Crawl Google Images, Fetch Images, Crop Face Image
 ## Setup
 
 ```bash
+# Clone Repository
+git clone https://github.com/shtnkgm/FaceCrawler.git
+
 # Install pip
 curl -kL https://bootstrap.pypa.io/get-pip.py | python3
 
