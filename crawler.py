@@ -31,6 +31,7 @@ def drawRect(image, rect, color):
         color,
         3)
 
+
 # メイン関数
 def main():
     keyword = sys.argv[1]
