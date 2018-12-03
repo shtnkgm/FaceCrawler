@@ -1,6 +1,3 @@
-# how to use
-# python3 crawler.py keyword 100
-
 from icrawler.builtin import GoogleImageCrawler
 import sys
 import cv2
