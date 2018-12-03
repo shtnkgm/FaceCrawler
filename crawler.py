@@ -1,11 +1,7 @@
 from icrawler.builtin import GoogleImageCrawler
 import sys
 import cv2
-import matplotlib.pyplot as plt
-import numpy as np
-import sys
 import os
-from PIL import Image
 
 
 # imageで指定した画像をrectの範囲でクロップして返す
