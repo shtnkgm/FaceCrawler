@@ -15,6 +15,7 @@ sudo pip3 install matplotlib
 sudo pip3 install opencv-python
 
 # Download OpenCV Cascade File
+cd FaceCrawler
 wget https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_frontalface_alt.xml
 ```
 
