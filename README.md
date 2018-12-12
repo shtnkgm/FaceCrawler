@@ -10,9 +10,9 @@ git clone https://github.com/shtnkgm/FaceCrawler.git
 # Install pip
 curl -kL https://bootstrap.pypa.io/get-pip.py | python3
 
-sudo pip install icrawler
-sudo pip install opencv-python
-sudo pip install matplotlib
+sudo pip3 install icrawler
+sudo pip3 install matplotlib
+sudo pip3 install opencv-python
 
 # Download OpenCV Cascade File
 wget https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_frontalface_alt.xml
