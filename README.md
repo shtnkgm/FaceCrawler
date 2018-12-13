@@ -1,5 +1,5 @@
 # 😉FaceCrawler
-Crawl Google Images, Fetch Images, Crop Face Image
+Python script to crawl people's images and crop face areas
 
 ## Setup
 
