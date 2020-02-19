@@ -1,4 +1,4 @@
-from icrawler.builtin import GoogleImageCrawler
+from icrawler.builtin import GoogleImageCrawler, BingImageCrawler
 import sys
 import cv2
 import os
@@ -41,7 +41,8 @@ def fetchAndCropFace(keyword, max_num):
     output_file_path = f"./training_data/cropped_face/{keyword}/"
 
     echo("crawl images")
-    crawler = GoogleImageCrawler(storage={"root_dir": input_file_path})
+    crawler = BingImageCrawler(storage={"root_dir": input_file_path})
+    # crawler = GoogleImageCrawler(storage={"root_dir": input_file_path})
     crawler.crawl(keyword=keyword, max_num=int(max_num))
 
     echo("original images in: " + input_file_path)
