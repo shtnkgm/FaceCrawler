@@ -37,30 +37,22 @@ def drawRect(image, rect, color):
 
 # 指定したキーワードの画像を取得して顔領域を切り出して保存
 def fetchAndCropFace(keyword, max_num):
-    echo("fetchAndCropFace")
     input_file_path = f"./training_data/original/{keyword}/"
     output_file_path = f"./training_data/cropped_face/{keyword}/"
 
-    crawler = GoogleImageCrawler(
-        feeder_threads=1,
-        parser_threads=2,
-        downloader_threads=4,
-        storage={"root_dir": input_file_path})
-    crawler.session.verify = False
-
+    echo("crawl images")
+    crawler = GoogleImageCrawler(storage={"root_dir": input_file_path})
     crawler.crawl(keyword=keyword, max_num=int(max_num))
 
-    echo("入力ファイルパス: " + input_file_path)
+    echo("original images in: " + input_file_path)
     os.makedirs(input_file_path, exist_ok=True)
-    echo("出力ファイルパス: " + output_file_path)
+    echo("cropped face images in: " + output_file_path)
     os.makedirs(output_file_path, exist_ok=True)
     input_files = os.listdir(input_file_path)
 
-    echo("画像取得枚数: " + str(len(input_files)))
-    echo("顔認識用特徴量ファイルを読み込み") #--- （カスケードファイルのパスを指定）
+    echo("fetched images count: " + str(len(input_files)))
     cascade = cv2.CascadeClassifier("./haarcascade_frontalface_alt.xml")
 
-    echo("認識結果表示用のwindowを作成")
     windowName = 'window'
     cv2.namedWindow(windowName, cv2.WINDOW_KEEPRATIO | cv2.WINDOW_NORMAL)
     cv2.resizeWindow(windowName, 500, 500)
@@ -75,7 +67,7 @@ def fetchAndCropFace(keyword, max_num):
         cv2.imshow(windowName, input_image)
         cv2.waitKey(50)
 
-        echo("顔認識の実行")
+        echo("detect face")
         face_rects = cascade.detectMultiScale(
             input_image,
             scaleFactor=1.1,
@@ -83,24 +75,23 @@ def fetchAndCropFace(keyword, max_num):
             minSize=(10, 10))
 
         if len(face_rects) == 0:
-            echo("顔の検出に失敗")
+            echo("detect face failure")
             continue
 
-        echo("顔の検出に成功")
+        echo("detect face success")
 
-        echo("最初に検出した顔のみ取得")
+        # 最初に検出した顔のみ取得
         face_rect = face_rects[0]
 
-        echo("顔領域だけ切り出して保存")
+        # 顔領域だけ切り出して保存
         output_image = crop(input_image, face_rect)
         cv2.imwrite(output_file_path + input_file, output_image)
 
-        echo("顔領域に矩形を描画して表示")
+        # 顔領域に矩形を描画して表示
         marked_input_image = drawRect(input_image, face_rect, (0, 255, 0))
         cv2.imshow(windowName, marked_input_image)
         cv2.waitKey(50)
 
-    # windowを破棄
     cv2.destroyAllWindows()
 
 # メイン関数
