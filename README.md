@@ -9,7 +9,6 @@ git clone https://github.com/shtnkgm/FaceCrawler.git
 cd FaceCrawler
 
 # Set Up
-
 make
 ```
 
