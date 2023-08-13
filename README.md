@@ -12,7 +12,9 @@ curl -kL https://bootstrap.pypa.io/get-pip.py | python3
 
 sudo pip3 install icrawler
 sudo pip3 install matplotlib
-sudo pip3 install opencv-python==4.1.2.30
+sudo pip3 install opencv-python
+sudo pip3 install beautifulsoup4
+sudo pip3 install lxml
 
 # Download OpenCV Cascade File
 cd FaceCrawler
