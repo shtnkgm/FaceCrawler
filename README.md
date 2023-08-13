@@ -19,6 +19,14 @@ make
 python3 crawler.py 100 person_name1 person_name2 ...
 ```
 
+### Usage Example
+
+```bash
+python3 crawler.py 100 "Marilyn Monroe"
+```
+
+![](example.png)
+
 ## Requirements
 
  - Python3
