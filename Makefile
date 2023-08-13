@@ -1,0 +1,2 @@
+make:
+	@sh setup.sh

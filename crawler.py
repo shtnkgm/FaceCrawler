@@ -37,8 +37,8 @@ def drawRect(image, rect, color):
 
 # 指定したキーワードの画像を取得して顔領域を切り出して保存
 def fetchAndCropFace(keyword, max_num):
-    input_file_path = f"./training_data/original/{keyword}/"
-    output_file_path = f"./training_data/cropped_face/{keyword}/"
+    input_file_path = f"./result/original_image/{keyword}/"
+    output_file_path = f"./result/cropped_face/{keyword}/"
 
     echo("crawl images")
     crawler = BingImageCrawler(storage={"root_dir": input_file_path})

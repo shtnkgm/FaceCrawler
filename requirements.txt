@@ -1,0 +1,6 @@
+icrawler
+matplotlib
+opencv-python
+beautifulsoup4
+lxml
+requests
